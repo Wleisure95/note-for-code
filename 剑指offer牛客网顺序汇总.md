@@ -1731,280 +1731,223 @@ string ReverseSentence(string s)
 }
 ```
 
-### 45.[扑克牌顺子](http://www.nowcoder.com/practice/762836f4d43d43ca9deb273b3de8e1f4?tpId=13&tqId=11198&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 45.面试题61：[扑克牌顺子](http://www.nowcoder.com/practice/762836f4d43d43ca9deb273b3de8e1f4?tpId=13&tqId=11198&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> LL今天心情特别好,因为他去买了一副扑克牌,发现里面居然有2个大王,2个小王(一副牌原本是54张^_^)...他随机从中抽出了5张牌,想测测自己的手气,看看能不能抽到顺子,如果抽到的话,他决定去买体育彩票,嘿嘿！！“红心A,黑桃3,小王,大王,方片5”,“Oh My God!”不是顺子.....LL不高兴了,他想了想,决定大\小 王可以看成任何数字,并且A看作1,J为11,Q为12,K为13。上面的5张牌就可以变成“1,2,3,4,5”(大小王分别看作2和4),“So Lucky!”。LL决定去买体育彩票啦。 现在,要求你使用这幅牌模拟上面的过程,然后告诉我们LL的运气如何。为了方便起见,你可以认为大小王是0。
->
-
-```c++
-bool isContinuous(int *numbers,int length)
-{
-	if (numbers == NULL || length < 1)
-	{
-		return false;
-	}
-
-	qsort(numbers);
-
-	int numberofzero = 0;
-	int numberofgap =0;
-
-	for (int i = 0; i < length && numbers[i] == 0; ++i)
-	{
-		numberofzero++;
-	}
-
-	int small = numberofzero;
-	int big = small+1;
-	while(big < length){
-		if (numbers[small] == numbers[big])
-		{
-			return false;
-		}
-
-		numberofgap += numbers[big] - numbers[small] -1;
-		small = big;
-		big++;
-	}
-
-	return numberofgap > numberofzero ? false :true;
-}
-```
-
-### 46.[孩子们的游戏(圆圈中最后剩下的数)](http://www.nowcoder.com/practice/f78a359491e64a50bce2d89cff857eb6?tpId=13&tqId=11199&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-> 每年六一儿童节,牛客都会准备一些小礼物去看望孤儿院的小朋友,今年亦是如此。HF作为牛客的资深元老,自然也准备了一些小游戏。其中,有个游戏是这样的:首先,让小朋友们围成一个大圈。然后,他随机指定一个数m,让编号为0的小朋友开始报数。每次喊到m-1的那个小朋友要出列唱首歌,然后可以在礼品箱中任意的挑选礼物,并且不再回到圈中,从他的下一个小朋友开始,继续0...m-1报数....这样下去....直到剩下最后一个小朋友,可以不用表演,并且拿到牛客名贵的“名侦探柯南”典藏版(名额有限哦!!^_^)。请你试着想下,哪个小朋友会得到这份礼品呢？(注：小朋友的编号是从0到n-1)
->
+> **题目：**从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，大小王可以看做任意数字。为了方便，大小王均以0来表示，并且假设这副牌中大小王均有两张。
 
 ```c++
-#include<stdio.h>
-#include<malloc.h>
-#include<stdlib.h>
-
-#define ListSize 100
-
- struct ListNode
+bool IsContinuous( vector<int> nums ) 
 {
- int data;
- struct ListNode *next; 
-};
-
-
-void Josephus(ListNode *head, int n, int m, int k)
-{
- ListNode *p,*q;
- int i;
- p=head;
- /*先找到编号为k的人*/
- for(i=1; i<k; i++)/*从第k个人开始报数*/
-  {
-   q=p;
-   p=p->next;
-  }
- /*此时p指向第k个结点*/
- 
- while(p->next != p)/*这个是判断是否只剩下一个结点*/
-  {
-  /*找出报数m的人*/
-   for(i=1; i<m; i++)/*数到m的人出列*/
+    if(nums.size()<5)
+        return false;
+    int min = 14,max=0;
+    int count[14] = {0};//计数
+    for(int x:nums)
     {
-     q=p;
-     p=p->next;
+        if(x==0)//王不计数，可以重复
+            continue;
+        count[x]++;//为每个数字计数
+        if(count[x]>1)
+            return false;//有重复，false；
+        if(x>max)
+            max=x;//维护最大最小值
+        if(x<min)
+            min=x;
     }
-   /*此时p指向数到m的结点*/
-   /*此时q指向的是m的前驱结点，p指向的是第m个结点*/
-   
-   q->next = p->next;/*这步就是将m的前驱结点指针域指向
-   m的后继结点*/
-   printf("%4d",p->data);/*打印出出列的数据*/
-   free(p);/*释放出列的结点空间*/
-   p=q->next;/*指向下一个结点，重新开始报数*/
-  }
- printf("%4d\n", p->data);
- 
+    return max-min<5;
 }
- 
-/*//////////////////////////////////////////////////////////////////////////////
-函数名:       CreateCycList
-函数功能:   宏定义和单链表定义
-入口参数: int n
-出口参数: 
-//////////////////////////////////////////////////////////////////////////////*/
-ListNode *CreateCycList(int n)
+//acwing 排序 思想一样，这样复杂度不如上面。
+bool IsContinuous( vector<int> nums ) 
 {
- ListNode *head = NULL;
- ListNode *s, *r;
- int i;
- for(i = 1; i <= n; i ++ )
-  {
-   s = (ListNode *)malloc(sizeof(ListNode));
-   s->data = i;
-   s->next = NULL;
-   if(head == NULL)
-    head = s;
-   else
-    r->next = s;/*本节点指针域指向下一个结点*/
-   r = s;/*临时指针指向下一个结点*/
-  }
- r->next = head;/*最后一个结点的指针域指向头结点形成环*/
- return head;/*返回头结点的地址*/
-}
-/*//////////////////////////////////////////////////////////////////////////////
-函数名:       main()
-函数功能:   主函数
-入口参数: 
-出口参数: 
-//////////////////////////////////////////////////////////////////////////////*/
-void main()
-{
- ListNode *h;
- int n,k,m;
- printf("输入环中人的个数n=");
- scanf("%d", & n);
- printf("输入开始报数的序号k=");
- scanf("%d", & k);
- printf("报数为m的人出列m=");
- scanf("%d", & m);
- h=CreateCycList(n);
- Josephus(h, n, m, k);
- system("pause");
+    if(nums.size()<5)
+        return false;
+    sort(nums.begin(),nums.end());
+    int k=0;
+    while(nums[k]==0)
+        k++;
+    for(int i = k+1;i<nums.size();i++)
+        if(nums[i]==nums[i-1])
+            return false;
+    return nums.back()-nums[k]<5;
 }
 ```
 
-### 47.[求1+2+3+...+n](http://www.nowcoder.com/practice/7a0da8fc483247ff8800059e12d7caf1?tpId=13&tqId=11200&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 46.面试题62：[圆圈中最后剩下的数字（约瑟夫环）](http://www.nowcoder.com/practice/f78a359491e64a50bce2d89cff857eb6?tpId=13&tqId=11199&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+> **题目：**0, 1, …, n-1这n个数字(n>0)排成一个圆圈，从数字0开始每次从这个圆圈里删除第m个数字。
+>
+> 求出这个圆圈里剩下的最后一个数字。
+
+![1553143868390](剑指offer牛客网顺序汇总.assets/1553143868390.png)
 
 ```c++
-int sum(int n){
-	int num = n;
-while(num){
-	num = num + sum(n-1);
+//递归 
+int LastRemaining_Solution(int n, int m)
+{
+    if(n<=0||m<=0)
+        return -1;
+    return (LastRemaining_Solution(n-1,m)+m)%n;
 }
-
-	return num;
+//循环
+int LastRemaining_Solution(int n, int m)
+{
+    if(n<=0||m<=0)
+        return -1;//特殊情况
+    int res = 0;//n==1的情况
+    for(int i=2;i<=n;i++)
+        res=(res+m)%i;//一直从1加到n
+    return res;//跟递归一个道理
 }
-```
-
-### 48.[不用加减乘除做加法](http://www.nowcoder.com/practice/59ac416b4b944300b617d4f7f111b215?tpId=13&tqId=11201&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-> 写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
->
-
-```
-  int Add(int num1, int num2)
+//模拟 熟悉操作练习，list<int>::iterator
+int LastRemaining_Solution(int n, int m)
+{
+    if(n<=0||m<=0)
+        return -1;//非负的int型的异常判断要设置为返回-1
+    list<int> num;//list型的容器，容器的一种
+    for(int i=0;i<n;i++)
+        num.push_back(i);
+    list<int>::iterator cur=num.begin();//迭代器生成的都是指针形式的
+    while(num.size()>1)//当最后size为1的时候，就停止循环了
     {
-        while(num2!=0)
+        for(int i=1;i<m;i++)//比while(--m)要快
         {
-            int temp=num1^num2;
-            num2=(num1&num2)<<1;
-            num1=temp;
+            cur++;
+            if(cur==num.end())//模拟一个环的作用
+                cur=num.begin();
         }
-        return num1;
+        cur++;
+        list<int>::iterator next=cur;//想要保存下来cur的值，而cur是一个类似指针的形式
+        if(next==num.end())//这里也要考虑到模拟环的作用
+            next=num.begin();
+        cur--;//cur之前自加了，这里要让它变回原来那个待删除的点
+        num.erase(cur);//直接删除这个类似指针的东西，就可以达到删除的目的
+        cur=next;
     }
+    return *(cur);//返回的要是值，所以加*
+}
 ```
 
-### 49.[把字符串转换成整数](http://www.nowcoder.com/practice/1277c681251b4372bdef344468e4f26e?tpId=13&tqId=11202&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 47.面试题64：[求1+2+3+...+n](http://www.nowcoder.com/practice/7a0da8fc483247ff8800059e12d7caf1?tpId=13&tqId=11200&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+>   **题目：** 求1+2+3+...+n，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
 
 ```c++
-#include<iostream>
-using namespace std;
-
-int str2int(const char *str)
+int Sum_Solution(int n) 
 {
-	const char *ptr = str;
-	int temp = 0;
-	if(*str == '+'|| *str == '-')
-	{
-		str++;
-	}
-	while(*str != 0)
-	{
-		if(*str < '0' || *str > '9')
-		{
-			break;
-		}
-
-		temp = temp * 10 + (*str - '0');
-		str++;
-	}
-
-	if(*ptr == '-')
-	{
-		temp = -temp;
-	}
-	return temp;
-}
-int main()
-{
-	while(1)
-	{
-		int n = 0;
-	char s[20];
-	cin>>s;
-	n = str2int(s);
-	cout<<n<<endl;
-	}
-	
-	 system("pause");
+    bool a[n][n+1];//bool只占一个字节
+    return sizeof(a)>>1;//n*(n+1)个字节。➗2就行了。
 }
 ```
 
-### 50.[数组中重复的数字](http://www.nowcoder.com/practice/623a5ac0ea5b4e5f95552655361ae0a8?tpId=13&tqId=11203&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 48.面试题65：[不用加减乘除做加法](http://www.nowcoder.com/practice/59ac416b4b944300b617d4f7f111b215?tpId=13&tqId=11201&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+> **题目：**写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
+
+```c++
+int Add(int num1, int num2)
+{
+    while(num2)//知道只有进位的部分为0 也就是没有产生进位停止
+    {
+        int s = num1 ^ num2; // 两数相加但是不进位
+        int w =(num1 & num2)<<1;//两数相加只有进位的部分
+        num1=s; // 分别赋值，再把这两个相加
+        num2=w;
+    }
+    return num1;//两数相加但是不进位的值，但是又没有进位部分，那就是结果
+}
+```
+
+## 49.面试题67：[把字符串转换成整数](http://www.nowcoder.com/practice/1277c681251b4372bdef344468e4f26e?tpId=13&tqId=11202&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+>   **题目：** 请你写一个函数StrToInt，实现把字符串转换成整数这个功能。当然，不能使用atoi或者其他类似的库函数。
+
+```c++
+int StrToInt(string str) 
+{
+    if(str.size()<=0)
+        return 0;
+    int k =0;
+    while(k<str.size()&&str[k]==' ')
+        k++;
+    int res=0;
+    bool is_minus = false;
+    if(str[k]=='+')
+        k++;
+    else if(str[k]=='-')
+    {
+        k++;
+        is_minus = true;
+    }
+    while(k<str.size())
+    {
+        if(str[k]>='0'&&str[k]<='9')
+        {
+            res = res*10 + str[k]-'0';
+            k++;
+        }
+        else
+            return 0;
+    }
+    if(is_minus)
+        res *=-1;
+    return res;
+}
+```
+
+## 50.面试题3 题目一：[数组中重复的数字](http://www.nowcoder.com/practice/623a5ac0ea5b4e5f95552655361ae0a8?tpId=13&tqId=11203&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 > 在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是重复的数字2或者3。
 >
 
 ```c++
-int find(int *numbers,int length)
+bool duplicate(int num[], int l, int* dup) 
 {
-	for (int i = 0; i < length; ++i)
-	{
-		int index = numbers[i];
-		if (index > length)
-		{
-			index = index -length;
-		}
-
-		if (numbers[index] > length)
-		{
-			return index;
-		}
-
-		numbers[index] = numbers[index] + length;
-	}
-
-	return -1;
+    if(num==nullptr||l<=0)
+        return false;
+    for(int i=0;i<l;i++)
+    {
+        if(num[i]<0||num[i]>=l)
+            return false;
+    }
+    for(int i=0;i<l;i++)
+    {
+        while(num[i]!=i)//不在自己的坑位上
+        {
+            if(num[i]==num[num[i]])//自己的坑位又被和自己长得一样的人占了。自己是多余的。
+            {
+                *dup = num[i];
+                return true;
+            }
+            swap(num[i],num[num[i]]);//回自己的坑位。
+        }
+    }
+    return false;
 }
 ```
 
-### 51.[构建乘积数组](http://www.nowcoder.com/practice/94a4d381a68b47b7a8bed86f2975db46?tpId=13&tqId=11204&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 51.面试题66：[构建乘积数组](http://www.nowcoder.com/practice/94a4d381a68b47b7a8bed86f2975db46?tpId=13&tqId=11204&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> 给定一个数组A[0,1,...,n-1],请构建一个数组B[0,1,...,n-1],其中B中的元素B[i]=A[0]*A[1]*...*A[i-1]*A[i+1]*...*A[n-1]。不能使用除法。
->
+> **题目：**给定一个数组A[0,1,...,n-1],请构建一个数组B[0,1,...,n-1],其中B中的元素B[i]=A[0]*A[1]*...*A[i-1]*A[i+1]*...*A[n-1]。不能使用除法。
 
 ```c++
- vector<int> multiply(const vector<int>& A) {
-
- 	int n = A.size();
-
- 	vector<int> b(n);
-
- 	int ret = 1;
- 	b[0] = 1;
-
- 	for (int i = 0; i < n; ++i)
- 	{
- 		b[i] = b[i-1] * A[i-1];
- 	}
-
- 	for (int i = n-1; i >=1; i--)
- 	{
- 		b[i] = b[i]*b[0];
-
- 		b[0] = b[0] *a[i];
- 	}
-
- 	return B; 
- }
+vector<int> multiply(const vector<int>& A) 
+{
+    int n=A.size();
+    vector<int> B(n);
+    int p=1;;
+    for(int i = 0;i < n; i++)
+    {
+        B[i] = p;//此时B[i] = A[0]~A[i-1]的的积。
+        p *= A[i];
+    }
+    p=1;
+    for(int i =n-1; i >=0;i--)
+    {
+        B[i] *=p;//B[i]再乘上A[n-1]~A[i+1]
+        p *=A[i];
+    }
+    return B;
+}
 ```
 
 ### 52.[正则表达式匹配](http://www.nowcoder.com/practice/45327ae22b7b413ea21df13ee7d6429c?tpId=13&tqId=11205&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
@@ -2091,7 +2034,7 @@ char FirstAppearingOnce()
 > 在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5
 >
 
-### 57.[二叉树的下一个结点](http://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e?tpId=13&tqId=11210&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 57.面试题8：[二叉树的下一个结点](http://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e?tpId=13&tqId=11210&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 ```c++
 //给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。
@@ -2367,10 +2310,34 @@ double GetMedian(){
 
 
 
-### 64.[滑动窗口的最大值](http://www.nowcoder.com/practice/1624bc35a45c42c0bc17d17fa0cba788?tpId=13&tqId=11217&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 64.面试题59 题目一：[滑动窗口的最大值](http://www.nowcoder.com/practice/1624bc35a45c42c0bc17d17fa0cba788?tpId=13&tqId=11217&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> 给定一个数组和滑动窗口的大小，找出所有滑动窗口里数值的最大值。例如，如果输入数组{2,3,4,2,6,2,5,1}及滑动窗口的大小3，那么一共存在6个滑动窗口，他们的最大值分别为{4,4,6,6,6,5}； 针对数组{2,3,4,2,6,2,5,1}的滑动窗口有以下6个： {[2,3,4],2,6,2,5,1}， {2,[3,4,2],6,2,5,1}， {2,3,[4,2,6],2,5,1}， {2,3,4,[2,6,2],5,1}， {2,3,4,2,[6,2,5],1}， {2,3,4,2,6,[2,5,1]}。
+> **题目：**给定一个数组和滑动窗口的大小，请找出所有滑动窗口里的最大值。例如，如果输入数组[2, 3, 4, 2, 6, 2, 5, 1]及滑动窗口的大小3,那么一共存在6个滑动窗口，它们的最大值分别为[4, 4, 6, 6, 6, 5]。 
 >
+> **注意：**数据保证k大于0，且k小于等于数组长度。
+
+```c++
+vector<int> maxInWindows(vector<int> num,int k)
+{
+    vector<int> res;
+    deque<int> q;
+    if(k==0)
+        return res;
+    for(int i =0;i<num.size();i++)
+    {
+        if(q.size() && q.front()+k<=i)
+            q.pop_front();//当前进队列的新人下标比最前面候选人多k了，那个候选人就退休了
+        while(q.size() && num[q.back()]<=num[i])
+            q.pop_back();//当前进队列的新人从队列尾部，踢掉所有比自己垃圾的。用while
+        q.push_back(i);//当前新人下标进来。
+        if(i>=k-1)//新人下标只有从k-1（第k个）开始，才开始选老大。
+            res.push_back(num[q.front()]);
+    }
+    return res;
+}
+```
+
+
 
 ### 65.[矩阵中的路径](http://www.nowcoder.com/practice/c61c6999eecb4b8f88a98f66b273a3cc?tpId=13&tqId=11218&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
@@ -2381,7 +2348,36 @@ double GetMedian(){
 
 > 地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？
 
-# acwing多出来的题目
+# [Acwing多出来的题目](https://www.acwing.com/problem/)
+
+>   ==以下序号为Acwing网站题目序号，面试题序号为书本题目序号==
+
+## 14.面试题3 题目二：[不修改数组找出重复的数字](https://www.acwing.com/problem/content/15/)
+
+>   题目：给定一个长度为 *n*+1的数组`nums`，数组中所有的数均在 1∼n的范围内，其中 *n*≥1。
+>
+>   请找出数组中任意一个重复的数，但不能修改输入的数组。
+
+```c++
+int duplicateInArray(vector<int>& nums) 
+{
+    int l = 1,r = nums.size()-1;//1和n，这个区间二分。
+    while(l<r)
+    {
+        int m = (l+r)>>1;
+        int s=0;
+        for(auto x:nums)
+            s += (x>=l)&&(x<=m);//[l,m]和[m+1,r]两个区间
+        if(s>m-l+1)
+            r = m;
+        else
+            l = m+1;
+    }
+    return l;
+}
+```
+
+
 
 ## 57.面试题44：[数字序列中某一位的数字](https://www.acwing.com/problem/content/52/)
 
@@ -2598,3 +2594,126 @@ int findNumberAppearingOnce(vector<int>& nums)
 ```
 
 ![1552962315811](剑指offer牛客网顺序汇总.assets/1552962315811.png)
+
+##80.  面试题60：[n个骰子的点数](https://www.acwing.com/problem/content/76/)
+
+>   **题目：** 将一个骰子投掷n次，获得的总点数为s，s的可能范围为n~6n。掷出某一点数，可能有多种掷法，例如投掷2次，掷出3点，共有[1,2],[2,1]两种掷法。 
+>
+>   请求出投掷n次，掷出n~6n点分别有多少种掷法。
+
+```c++
+//递归，时间复杂度太高，很多多余不行的情况都要检查
+vector<int> numberOfDice(int n)
+{
+    vector<int> res;
+    for(int i=n;i<=n*6;i++)
+        res.push_back(dfs(n,i));
+    return res;
+}
+int dfs(int n,int sum)
+{
+    if(sum<0) 
+        return 0;
+    if(n==0)
+        return !sum;
+    int res= 0;
+    for(int i =1;i<=6;i++)
+        res+=dfs(n-1,sum-i);
+    return res;
+}
+//dp 动态规划
+vector<int> numberOfDice(int n) 
+{
+    vector<vector<int>> f(n+1,vector<int>(n*6+1));
+    f[0][0] =1;
+    for(int i=1;i<=n;i++)
+        for(int j=1;j<=i*6;j++)
+            for(int k=1;k<=min(j,6);k++)//少一个骰子，总和少6以内的种树全部相加。
+                f[i][j] += f[i-1][j-k];//画图，矩阵的值等于上一行前六个之和。
+    vector<int> res;
+    for(int i = n;i<=n*6;i++)
+        res.push_back(f[n][i]);
+    return res;
+}
+```
+
+##83.面试题63：[股票的最大利润](https://www.acwing.com/problem/content/79/)
+
+>   **题目：** 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖 ==一次==该股票可能获得的利润是多少？
+>
+>   例如一只股票在某些时间节点的价格为[9, 11, 8, 5, 7, 12, 16, 14]。如果我们能在价格为5的时候买入并在价格为16时卖出，则能收获最大的利润11。
+
+```c++
+int maxDiff(vector<int>& nums) 
+{
+    if(nums.empty())
+        return 0;
+    int res = 0;
+    int minv = nums[0];
+    for(int i = 1;i<nums.size();i++)
+    {
+        res = max (res, nums[i] - minv);//维护一个最大差值
+        minv = min(minv,nums[i]);//维护一个最小值
+    }
+    return res;
+}
+```
+
+##88.面试题68：[树中两个节点的最低公共祖先](https://www.acwing.com/problem/content/84/)
+
+>   **题目：**给出一个二叉树，输入两个树节点，求它们的最低公共祖先。
+>
+>   一个树节点的祖先节点包括它本身。
+>
+>   **注意：**
+>
+>   -   输入的二叉树不为空；
+>   -   输入的两个节点一定不为空，且是二叉树中的节点；
+
+![1553153450603](剑指offer牛客网顺序汇总.assets/1553153450603.png)
+
+```c++
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) 
+{
+    if(!root)
+        return nullptr;//从上往下走，走到结束都没遇见，nullptr
+    if(root==p||root==q)
+        return root;//走到p或q就返回。
+    auto left = lowestCommonAncestor(root->left,p,q);//往左走，遇到p或者q了
+    auto right= lowestCommonAncestor(root->right,p,q);//往右走，遇到p或者q了
+    if(left && right)
+        return root;//如果左右都遇到了，说明左右一边一个，ok就是它了。
+    if(left)//只有一边有，说明这边存在公共祖先。
+        return left;
+    return right;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
