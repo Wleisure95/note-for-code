@@ -83,17 +83,13 @@ void replaceSpace(char *str,int length)//输入为字符串首字符的指针，
 //};
 vector<int> printListFromTailToHead(ListNode* head) 
 {
-    vector<int> vals; //声明返回的向量作为结果
-    if(head != nullptr)//如果head不为空，开始操作，如果为空，会直接返回空的vals。
+    vector<int> res;
+    while(head)
     {
-        vals.insert(vals.begin(),head->val);//将值插入到向量的最前面。
-        while(head->next != NULL)//开始循环直到下一个为空。
-        {
-            vals.insert(vals.begin(),head->next->val);//达到从尾到头的效果。
-            head = head->next;//链表指针后移。
-        }
+        res.insert(res.begin(),head->val);
+        head = head->next;
     }
-    return vals;
+    return res;
 }
 ```
 
@@ -139,6 +135,30 @@ TreeNode* reConstructBinaryTree(vector<int> pre,vector<int> vin)
 	res->left = reConstructBinaryTree(pre_left,vin_left);//以左子树的前序和中序重建左子树
 	res->right= reConstructBinaryTree(pre_right,vin_right);//以右子树的前序和中序重建右子树
 	return res;
+}
+//acwing 的递归dfs 思想一样，操作养成dfs的习惯
+TreeNode* reConstructBinaryTree(vector<int> pre,vector<int> vin) 
+{
+    if(pre.size()==0||vin.size()==0||pre.size()!=vin.size())
+        return nullptr;
+    int n = pre.size();
+    return dfs(pre,vin,0,n-1,0,n-1);
+}
+TreeNode* dfs(vector<int> pre,vector<int> in, int pl,int pr,int il,int ir)
+{
+    if(pl>pr)
+        return nullptr;
+    int k =0;
+    for(int i = il;i<=ir;i++)
+        if(in[i]==pre[pl])
+        {
+            k = i - il;
+            break;
+        }
+    TreeNode* res = new TreeNode(pre[pl]);
+    res->left = dfs(pre,in,pl+1,pl+k,il,il+k-1);
+    res->right= dfs(pre,in,pl+k+1,pr,il+k+1,ir);
+    return res;
 }
 ```
 
@@ -262,7 +282,7 @@ int minNumberInRotateArray(vector<int> rotateArray)
 		if(rotateArray[mid]<rotateArray[high])//mid值小于high值
 			high = mid;//mid到high非减，最小值在mid或mid左边，把mid当high，等于把mid右边砍掉
 		else if(rotateArray[mid] == rotateArray[high])//mid值等于high值
-			high--;//这种情况最小值在mid或mid左或mid右都有可能，high--，一个个试
+			high--;//这种情况最小值在mid或mid左或mid右都有可能，high--，一个个试，不能low++
 		else//mid值大于high值
 			low = mid +1;//最小值必定在mid右边，把mid和mid左边都砍掉。
 	}//这里只能有high值作为标准分类，以low值分类试过不行，可能因为是找的最小值。
@@ -2036,39 +2056,31 @@ char FirstAppearingOnce()
 
 ## 57.面试题8：[二叉树的下一个结点](http://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e?tpId=13&tqId=11210&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
+>   **题目：** 给定一棵二叉树的其中一个节点，请找出中序遍历序列的下一个节点。
+>
+>   **注意：** 
+>
+>   -   如果给定的节点是中序遍历序列的最后一个，则返回空节点;
+>   -   二叉树一定不为空，且给定的节点一定不是空节点；
+
+![1553783113422](剑指offer牛客网顺序汇总.assets/1553783113422.png)
+
 ```c++
 //给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。
-//注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。
-  TreeLinkNode* GetNext(TreeLinkNode* pNode)
+//注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。next代表父节点。
+TreeLinkNode* GetNext(TreeLinkNode* p)
+{
+    if(p->right)
     {
-        if (pNode == NULL)
-        {
-        	return NULL;
-        }
-
-        if (pNode->right != NULL)
-        {
-        	pNode = pNode->right;
-
-        	while(pNode->left != NULL)
-        	{
-        		pNode = pNode->left;
-        	}
-
-        	return pNode;
-        }
-
-        while(p->next != NULL){
-        	if (pNode == pNode->next->left)
-        	{
-        		return pNode->next;
-        	}
-
-        	pNode = pNode->next;
-        }
-
-        return NULL;
+        p = p->right;
+        while(p->left)
+            p = p->left;
+        return p;
     }
+    while(p->next && p == p->next->right)
+        p = p ->next;
+    return p->next;
+}
 ```
 
 ### 58.[对称的二叉树](http://www.nowcoder.com/practice/ff05d44dfdb04e1d83bdbdab320efbcb?tpId=13&tqId=11211&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
