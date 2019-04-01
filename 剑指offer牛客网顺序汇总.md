@@ -38,32 +38,30 @@ void replaceSpace(char *str,int length)//输入为字符串首字符的指针，
 {
     if(str==nullptr || length<=0)//首指针为空或者字符串长度<=0，直接返回空。
         return;
-    int str_length = 0;//记录字符串长度的变量。
-    int number_blank = 0;//记录字符串中空格数量的变量。
+    int l = 0;//记录字符串长度的变量。
+    int num_blank = 0;//记录字符串中空格数量的变量。
     int i=0;//循环字符串的下标。
     while(str[i] !='\0')//遍历字符串直到为休止符为止。
     {
-        str_length++;//长度+1。
+        l++;//长度+1。
         if(str[i]==' ') 
-            number_blank++;//遇到空格时，空格数量+1。
+            num_blank++;//遇到空格时，空格数量+1。
         i++;//下标+1。
     }//每一个空格替换后，会多用2个长度。
-    int new_length = str_length + number_blank*2;//新的字符串长度为旧的长度+2倍空格数量
-    if (new_length > length || number_blank==0)//当新的长度超过允许的长度，或者空格为0，退出
+    int new_l = l + num_blank*2;//新的字符串长度为旧的长度+2倍空格数量
+    if (l > length || num_blank==0)//当新的长度超过允许的长度，或者空格为0，退出
         return;
-    int index_str = str_length;//字符串长度作为索引，如图P1
-    int index_new = new_length;//新的长度作为新的索引，如图P2
-    while(index_str >=0)//从index_str位置的休止符开始循环到第0个字符，共index_str+1个字符。
-    {//这里不能用index_str-1,从休止符'\0'开始移动。
-        if(str[index_str]==' ')//如果P1为空格。
+    while(l >=0)
+    {
+        if(str[l]==' ')
         {
-            str[index_new--] = '0';//P2依次改为%20，--了三次
-            str[index_new--] = '2';
-            str[index_new--] = '%';
+            str[new_l--] = '0';
+            str[new_l--] = '2';
+            str[new_l--] = '%';
+            l--;
         }
         else
-            str[index_new--] = str[index_str];//如果P1不是空格，P1的值移动给P2
-        index_str--;//P1--。
+            str[new_l--] = str[l--];
     }
 }
 ```
@@ -462,11 +460,11 @@ double Power(double base, int e)
         p = p>>1;//右移一位
         base *= base;//该位置对应的底数
     }
-    return (e>=0)?res:(1/res);//考虑直输为0的情况.
+    return (e>=0)?res:(1.0/res);//考虑直输为0的情况.
 }
 ```
 
-## 13.[调整数组顺序使奇数位于偶数前面](http://www.nowcoder.com/practice/beb5aa231adc45b2a5dcc5b62c93f593?tpId=13&tqId=11166&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 13.面试题21：[调整数组顺序使奇数位于偶数前面](http://www.nowcoder.com/practice/beb5aa231adc45b2a5dcc5b62c93f593?tpId=13&tqId=11166&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 > **题目:** 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，==偶数和偶数之间的相对位置不变==。
 
@@ -1970,15 +1968,113 @@ vector<int> multiply(const vector<int>& A)
 }
 ```
 
-### 52.[正则表达式匹配](http://www.nowcoder.com/practice/45327ae22b7b413ea21df13ee7d6429c?tpId=13&tqId=11205&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 52.面试题19：[正则表达式匹配](http://www.nowcoder.com/practice/45327ae22b7b413ea21df13ee7d6429c?tpId=13&tqId=11205&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> 请实现一个函数用来匹配包括'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，而'*'表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串"aaa"与模式"a.a"和"ab*ac*a"匹配，但是与"aa.a"和"ab*a"均不匹配
+> **题目：**请实现一个函数用来匹配包括`'.'`和`'*'`的正则表达式。
 >
-
-### 53.[表示数值的字符串](http://www.nowcoder.com/practice/6f8c901d091949a5837e24bb82a731f2?tpId=13&tqId=11206&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-> 请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都表示数值。 但是"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
+> 模式中的字符`'.'`表示任意一个字符，而`'*'`表示它前面的字符可以出现任意次（含0次）。
 >
+> 在本题中，匹配是指字符串的所有字符匹配整个模式。
+>
+> 例如，字符串`"aaa"`与模式`"a.a"`和`"ab*ac*a"`匹配，但是与`"aa.a"`和`"ab*a"`均不匹配。
+
+![1553851844286](剑指offer牛客网顺序汇总.assets/1553851844286.png)
+
+```c++
+bool match(char* str, char* pattern)
+{
+    if(*pattern=='\0')
+        return *str=='\0';
+    if(*(pattern+1) == '*')//有多种可能
+    {
+        if (*str == *pattern )
+            return match(str, pattern+2) || match(str+1, pattern)||match(str+1,pattern+2);
+        else if(*str!='\0' && *pattern=='.')
+            return match(str, pattern+2)||match(str+1, pattern)|| match(str+1,pattern+2);
+        else
+            return match(str, pattern+2);
+    }
+    else
+    {
+        if (*str == *pattern || (*str != '\0' && *pattern == '.'))
+            return match(str+1, pattern+1);
+    }
+
+    return false;
+}
+//acwing的输入，用dfs参数代替指针
+bool isMatch(string s, string p)
+{
+    if(p.empty())
+        return s.empty();
+    return dfs(s,p,0,0);
+}
+bool dfs(string s,string p, int a, int b)
+{
+    if(b==p.size())
+        return a==s.size();
+    if(p[b+1]=='*')
+    {
+        if(s[a]==p[b] || (a!=s.size()&&p[b]=='.') )
+            //return dfs(s,p,a,b+2)||dfs(s,p,a+1,b)||dfs(s,p,a+1,b+2);
+            return dfs(s,p,a,b+2)||dfs(s,p,a+1,b);
+        else
+            return dfs(s,p,a,b+2);
+    }
+    else
+    {
+        if(s[a]==p[b] || (a!=s.size()&&p[b]=='.') )
+            return dfs(s,p,a+1,b+1);
+    }
+    return false;
+}
+```
+
+## 53.面试题20： [表示数值的字符串](http://www.nowcoder.com/practice/6f8c901d091949a5837e24bb82a731f2?tpId=13&tqId=11206&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+>   **题目：** 请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都是数值。 但"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
+
+![1553871768027](剑指offer牛客网顺序汇总.assets/1553871768027.png)
+
+```c++
+bool isNumeric(char* s)
+{
+    if(!s)
+        return false;
+    int len = strlen(s);
+    int i = 0,dot = 0,e=0,num=0;
+    while(s[i]==' ')
+        i++;
+    if(s[i]=='+'||s[i]=='-')
+        i++;
+    for(;i<len;i++)
+    {
+        if(s[i]>='0' && s[i]<='9')
+            num=1;
+        else if(s[i]=='.')
+        {
+            if(dot || e)
+                return false;
+            dot++;
+        }
+        else if(s[i]=='e' || s[i]=='E')
+        {
+            if(e||!num)
+                return false;
+            e=1;
+            if(s[i+1]=='\0')
+                return false;
+            if(s[i+1]=='+'||s[i+1]=='-')
+                i+=2;
+            if(s[i]=='\0')
+                return false;
+        }
+        else 
+            return false;
+    }
+    return true;
+}
+```
 
 ## 54.面试题50 题目二：[字符流中第一个不重复的字符](http://www.nowcoder.com/practice/00de97733b8e4f97a3fb5c680ee10720?tpId=13&tqId=11207&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
@@ -2008,51 +2104,65 @@ char FirstAppearingOnce()
 }
 ```
 
-### 55.[链表中环的入口结点](http://www.nowcoder.com/practice/253d2c59ec3e4bc68da16833f79a38e4?tpId=13&tqId=11208&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 55.面试题23：[链表中环的入口结点](http://www.nowcoder.com/practice/253d2c59ec3e4bc68da16833f79a38e4?tpId=13&tqId=11208&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> 一个链表中包含环，请找出该链表的环的入口结点。
+> **题目：**给定一个链表，若其中包含环，则输出环的入口节点。
 >
+> 若其中不包含环，则输出`null`。
+
+![1554090677695](剑指offer牛客网顺序汇总.assets/1554090677695.png)
 
 ```c++
 //第一步，找环中相汇点。分别用p1，p2指向链表头部，p1每次走一步，p2每次走二步，直到p1==p2找到在环中的相汇点。
 //第二步，找环的入口。接上步，当p1==p2时，p2所经过节点数为2x,p1所经过节点数为x
 //设环中有n个节点,p2比p1多走一圈有2x=n+x; n=x;可以看出p1实际走了一个环的步数
 //再让p2指向链表头部，p1位置不变，p1,p2每次走一步直到p1==p2; 此时p1指向环的入口。
- ListNode* EntryNodeOfLoop(ListNode* pHead)
+ListNode* EntryNodeOfLoop(ListNode* p)
+{
+    auto p1=p->next,p2=p1->next;
+    if(!p||!p1||!p2)
+        return nullptr;
+    while(p1!=p2)
     {
-    	ListNode *p1 = pHead;
-    	ListNode *p2 = pHead;
-
-    	while(p2 != NULL && p2.next!= NULL)
-    	{
-    		p1 = p1->next;
-    		p2 = p2->next->next;
-    		if (p1 == p2)
-    		{
-    			p2 = pHead;
-
-    			while(p1 = p2)
-    			{
-    				p1 = p1->next;
-    				p2 = p2->next;
-    			}
-
-    			if (p1 = p2)
-    			{
-    				return p1;
-    			}
-    		}
-    	}
-
-    	return NULL;
-
+        if(!p2)
+            return nullptr;
+        p1=p1->next;
+        p2=p2->next->next;
     }
+    p1=p;
+    while(p1!=p2)
+    {
+        p1=p1->next;
+        p2=p2->next;
+    }
+    return p1;
+}
 ```
 
-### 56.[删除链表中重复的结点](http://www.nowcoder.com/practice/fc533c45b73a41b0b44ccba763f866ef?tpId=13&tqId=11209&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 56.面试题18 题目二：[删除链表中重复的结点](http://www.nowcoder.com/practice/fc533c45b73a41b0b44ccba763f866ef?tpId=13&tqId=11209&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> 在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5
->
+> **题目：**在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5
+
+```c++
+ListNode* deleteDuplication(ListNode* pHead)
+{
+    auto fake = new ListNode(-1);
+    fake->next = pHead;
+
+    auto p = fake;
+    while(p->next)
+    {
+        auto q = p->next;
+        while(q && p->next->val==q->val )//p->next为标准，q，q->next依次比较，q肯定一样。
+            q=q->next;
+        if(p->next->next==q)
+            p=p->next;
+        else
+            p->next=q;
+    }
+    return fake->next;
+}
+```
 
 ## 57.面试题8：[二叉树的下一个结点](http://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e?tpId=13&tqId=11210&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
@@ -2267,7 +2377,7 @@ public:
 
 >   acwing 的调试图，将层序遍历的二叉树 序列化为前序遍历额的字符串，记录一个u下标，遍历字符串，递归反序列化为二叉树。
 
-## 62.[二叉搜索树的第k个结点](http://www.nowcoder.com/practice/ef068f602dde4d28aab2b210e859150a?tpId=13&tqId=11215&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 62.面试题54：[二叉搜索树的第k小的结点](http://www.nowcoder.com/practice/ef068f602dde4d28aab2b210e859150a?tpId=13&tqId=11215&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 >   **题目：** 给定一棵二叉搜索树，请找出其中的第k小的结点。你可以假设树和k都存在，并且1≤k≤树的总结点数。
 
@@ -2351,14 +2461,108 @@ vector<int> maxInWindows(vector<int> num,int k)
 
 
 
-### 65.[矩阵中的路径](http://www.nowcoder.com/practice/c61c6999eecb4b8f88a98f66b273a3cc?tpId=13&tqId=11218&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 65.面试题12：[矩阵中的路径](http://www.nowcoder.com/practice/c61c6999eecb4b8f88a98f66b273a3cc?tpId=13&tqId=11218&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> 请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，则该路径不能再进入该格子。 例如 a b c e s f c s a d e e 矩阵中包含一条字符串"bcced"的路径，但是矩阵中不包含"abcb"路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入该格子。
+> **题目：**请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，则之后不能再次进入这个格子。
 >
+>  **注意：** 
+>
+> -   输入的路径不为空；
+> -   所有出现的字符均为大写英文字母；
 
-### 66.[机器人的运动范围](http://www.nowcoder.com/practice/6e5207314b5241fb83f2329e89fdecc8?tpId=13&tqId=11219&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+![1553829773797](剑指offer牛客网顺序汇总.assets/1553829773797.png)
 
-> 地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？
+```c++
+int n,m;
+int dx[4]={1,0,-1,0},dy[4]={0,1,0,-1};
+bool hasPath(char* matrix, int rows, int cols, char* str)
+{
+    n=rows,m=cols;
+    for(int i=0;i<n;i++)
+        for(int j=0;j<m;j++)
+            if(dfs(matrix,str,0,i,j))
+                return true;
+    return false;
+}
+bool dfs(char* matrix,char* str,int u,int x,int y)
+{
+    if(str[u]!=matrix[x*m+y])
+        return false;
+    int k=0;
+    while(str[k]!='\0')
+        k++;
+    if(u==k-1)
+        return true;
+    char t=matrix[x*m+y];
+    matrix[x*m+y]='#';
+
+    for(int i=0;i<4;i++)
+    {
+        int a=x+dx[i],b=y+dy[i];
+        if(a>=0 && a<n && b>=0 && b<m && matrix[a*m+b]==str[u+1])
+            if(dfs(matrix,str,u+1,a,b))
+                return true;
+    }
+    matrix[x*m+y]=t;
+    return false;
+}
+```
+
+## 66.面试题13：[机器人的运动范围](http://www.nowcoder.com/practice/6e5207314b5241fb83f2329e89fdecc8?tpId=13&tqId=11219&rp=4&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+> **题目：**地上有一个*m*行和*n*列的方格，横纵坐标范围分别是0∼m−1和0∼n−1。
+>
+> 一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格。但是不能进入行坐标和列坐标的数位之和大于*k*的格子。
+>
+> 请问该机器人能够达到多少个格子？
+
+![1553839554357](剑指offer牛客网顺序汇总.assets/1553839554357.png)
+
+```c++
+int get_sum(pair<int,int> p)
+{
+    int res=0;
+    while(p.first)
+    {
+        res +=p.first%10;
+        p.first /=10;
+    }
+    while(p.second)
+    {
+        res +=p.second%10;
+        p.second /=10;
+    }
+    return res;
+}
+int dx[4]={0,1,0,-1},dy[4]={1,0,-1,0};
+int movingCount(int threshold, int rows, int cols)
+{
+    if(!rows || !cols)
+        return 0;
+    queue<pair<int,int>> q;
+    q.push({0,0});
+    vector<vector<bool>> flag(rows,vector<bool>(cols));
+    int res=0;
+    while(q.size())
+    {
+        auto t = q.front();
+        q.pop();
+        if(flag[t.first][t.second] || get_sum(t)>threshold)
+            continue;
+        res++;
+        flag[t.first][t.second]=true;
+        for(int i=0;i<4;i++)
+        {
+            int x = t.first + dx[i], y =t.second + dy[i];
+            if(x>=0 && x<rows && y>=0 && y<cols)
+                q.push({x,y});
+        }
+    }
+    return res;
+}
+```
+
+
 
 # [Acwing多出来的题目](https://www.acwing.com/problem/)
 
@@ -2386,6 +2590,50 @@ int duplicateInArray(vector<int>& nums)
             l = m+1;
     }
     return l;
+}
+```
+
+## 25.面试题14：[剪绳子](https://www.acwing.com/problem/content/description/24/)
+
+>   **题目：** 给你一根长度为n绳子，请把绳子剪成m段 (m、n 都是整数，2≤n≤58 并且 m≥2)。
+>
+>    每段的绳子的长度记为k[0]、k[1]、……、k[m]。k[0]k[1] … k[m] 可能的最大乘积是多少？
+>
+>   例如当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到最大的乘积18。
+
+![1553846223582](剑指offer牛客网顺序汇总.assets/1553846223582.png)
+
+```c++
+int maxProductAfterCutting(int n)
+{
+    if(n<4)
+        return n-1;
+    int res = 1;
+    if(n%3==1)
+        res=4,n -=4;
+    if(n%3==2)
+        res=2,n -=2;
+    while(n)
+    {
+        res *=3;
+        n -=3;
+    }
+    return res;
+}
+```
+
+## 28.面试题18 题目一：[在O(1)时间内删除链表节点](https://www.acwing.com/problem/content/85/)
+
+>   **题目：** 给定单向链表的一个节点指针，定义一个函数在O(1)时间删除该结点。
+>
+>   假设链表一定存在，并且该节点一定不是尾节点。
+
+![1553847208973](剑指offer牛客网顺序汇总.assets/1553847208973.png)
+
+```c++
+void deleteNode(ListNode* node)
+{
+    *node = *(node->next);
 }
 ```
 
