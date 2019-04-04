@@ -542,7 +542,7 @@ ListNode* ReverseList(ListNode* pHead)
 //第三次函数输入为(2->1->nullptr,3->nullptr)
 //这里进入else if ,返回3->2->1->nullptr ,也就是3->2->1.完成
 
-//方法二 循环  和递归的思想一样的
+//方法二 循环  和递归的思想一样的  推荐这种
 ListNode* ReverseList(ListNode* p) 
 {//p为1->2->3
     ListNode* pre=nullptr;//pre为nullptr
@@ -596,23 +596,20 @@ ListNode* Merge(ListNode* pHead1, ListNode* pHead2)
 ```C++
 bool HasSubtree(TreeNode* p1, TreeNode* p2)
 {
-    if(p1&&p2)//只有当p1 p2都存在时才会判断,不然空p2不是任意树的子结构,空p1自然也false.
-    {
-        return(does1have2(p1,p2)||HasSubtree(p1->left,p2)||HasSubtree(p1->right,p2));
-    }//p1从根节点就包含p2 或者p1的左右任意一个子树里面(非根节点)包含p2都ok.
-    return false;
-}
-
-bool does1have2(TreeNode* p1,TreeNode* p2)
-{//判断p1从根节点开始是否包含p2 ,, 和上面函数有意义上的区别
-    if(!p2)//这个函数里p2不存在时允许的,因为上个函数已经保证了原始的p2非空.
+    if(!p1||!p2)
+        return false;
+    if(ispart(p1,p2))
         return true;
-    if(!p1)//在p2存在的情况下,p1不存在,false
+    return HasSubtree(p1->left,p2)||HasSubtree(p1->right,p2);
+}
+bool ispart(TreeNode* p1, TreeNode* p2)
+{
+    if(!p2)
+        return true;
+    if(!p1||p1->val!=p2->val)
         return false;
-    if(p1->val!=p2->val)//值不相等,false
-        return false;
-    return does1have2(p1->left,p2->left)&&does1have2(p1->right,p2->right);
-}//左右值都相等一直到p2都没了为止.
+    return ispart(p1->left,p2->left)&&ispart(p1->right,p2->right);
+}
 ```
 
 ## 18.面试题27: [二叉树的镜像](http://www.nowcoder.com/practice/564f4c26aa584921bc75623e48ca3011?tpId=13&tqId=11171&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
@@ -625,8 +622,6 @@ bool does1have2(TreeNode* p1,TreeNode* p2)
 void Mirror(TreeNode *p) 
 {
     if(!p) //p不存在,over
-        return;
-    if(!p->left&&!p->right)//只有一个根节点,没什么可以镜像的,over
         return;
     TreeNode* temp=p->left;
     p->left=p->right;
@@ -648,27 +643,25 @@ void Mirror(TreeNode *p)
 vector<int> printMatrix(vector<vector<int> > matrix) 
 {
     vector<int> res;
-    int row=matrix.size();//行数
-    int col=matrix[0].size();//列数
-    int c=((row<col?row:col)+1)>>1;//转圈圈的圈数,偶数/2,奇数/2往上取整,最后一圈只有一条
-    for(int i=0; i<c;i++)
-    {//共循环c圈，每一圈起点为（i，i）
-        for(int a=i;a<col-i;a++)
+    int n = matrix.size();
+    if(!n)
+        return res;
+    int m = matrix[0].size();
+    vector<vector<bool>> st(n,vector<bool>(m));
+
+    int dx[4]={0,1,0,-1},dy[4]={1,0,-1,0};//右下左上
+    int x=0,y=0,d=0;
+    for(int i=0;i<n*m;i++)
+    {
+        res.push_back(matrix[x][y]);
+        st[x][y]=true;
+        int a = x+dx[d],b=y+dy[d];
+        if(a<0||a>=n||b<0||b>=m||st[a][b])
         {
-            res.push_back(matrix[i][a]);
+            d = (d+1)%4;
+            a = x + dx[d],b = y + dy[d];
         }
-        for(int b=i+1;b<row-i;b++)
-        {
-            res.push_back(matrix[b][col-i-1]);
-        }
-        for(int a=col-i-2;(a>=i)&&(row-i-1>i);a--)
-        {//好好画图，第二个约束条件（很重要）防止原路返回，
-            res.push_back(matrix[row-i-1][a]);//晕了.row-1代表最后一行,col-1代表最后一列
-        }
-        for(int d=row-i-2;(d>i)&&(col-i-1>i);d--)
-        {//这个比上面少个=号，因为最后一条边可走的格子少一个
-            res.push_back(matrix[d][i]);
-        }
+        x=a,y=b;
     }
     return res;
 }
@@ -727,7 +720,7 @@ bool IsPopOrder(vector<int> pushV,vector<int> popV)
     for(int i=0;i<pushV.size();i++)
     {
         st.push(pushV[i]);
-        while(m<popV.size()&&st.top()==popV[m])//注意用while，可以一直减少（很重要）
+        while(st.size()&&st.top()==popV[m])//注意while，可一直pop（很重要）
         {
             st.pop();
             m++;//m作为popV的下标索引
@@ -2193,36 +2186,26 @@ TreeLinkNode* GetNext(TreeLinkNode* p)
 }
 ```
 
-### 58.[对称的二叉树](http://www.nowcoder.com/practice/ff05d44dfdb04e1d83bdbdab320efbcb?tpId=13&tqId=11211&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 58.面试题28：[对称的二叉树](http://www.nowcoder.com/practice/ff05d44dfdb04e1d83bdbdab320efbcb?tpId=13&tqId=11211&rp=3&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
-> 请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。
->
+> **题目：**请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。
+
+![1554353727323](剑指offer牛客网顺序汇总.assets/1554353727323.png)
 
 ```c++
-bool isSymmetrical(TreeNode* pRoot)
-    {
-    	if (pRoot == NULL)
-    	{
-    		return true;
-    	}
-
-    	return f(pRoot->left,pRoot->right);
-    }
-
-
-bool f(TreeNode* p1,TreeNode* p2)
+bool isSymmetrical(TreeNode* p)
 {
-	if (p1 == NULL && p2 == NULL)
-	{
-		return true;
-	}
-
-	if (p1 != NULL && p2 != NULL)
-	{
-			return p1->val==p2->val && f(p1->left,p1->right) && f(p2->left,p2->right);
-	}
-
-	return false;
+    if(!p)
+        return true;
+    return dfs(p->left,p->right);
+}
+bool dfs(TreeNode* p,TreeNode* q)
+{
+    if(!p||!q)
+        return !p && !q;//这个操作有点
+    if(p->val!=q->val)
+        return false;
+    return dfs(p->left,q->right) && dfs(p->right,q->left);
 }
 ```
 
@@ -2236,29 +2219,28 @@ bool f(TreeNode* p1,TreeNode* p2)
 vector<vector<int>> Print(TreeNode* root) 
 {
     vector<vector<int>> res;
-    vector<int> level;
     if(!root)
         return res;
-    int cnt=0;
+    vector<int> level;
     queue<TreeNode*> q;
     q.push(root);
     q.push(nullptr);
+    bool flag = true;
     while(q.size())
     {
-        TreeNode* p=q.front();
+        auto t = q.front();
         q.pop();
-        if(p)
+        if(t)
         {
-            level.push_back(p->val);
-            if(p->left)
-                q.push(p->left);
-            if(p->right)
-                q.push(p->right);
+            level.push_back(t->val);
+            if(t->left)
+                q.push(t->left);
+            if(t->right)
+                q.push(t->right);
         }
         else
         {
-            cnt+=1;
-            if(cnt%2!=0)
+            if(flag)
                 res.push_back(level);
             else
             {
@@ -2266,10 +2248,9 @@ vector<vector<int>> Print(TreeNode* root)
                 res.push_back(level);
             }
             if(q.size())
-            {
-                level.clear();
                 q.push(nullptr);
-            }
+            level.clear();
+            flag=!flag;
         }
     }
     return res;
@@ -2948,32 +2929,4 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
     return right;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
