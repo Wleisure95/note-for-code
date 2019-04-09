@@ -1,5 +1,7 @@
 # [剑指offer牛客网顺序汇总](https://www.nowcoder.com/ta/coding-interviews)
 
+> [本文地址](https://github.com/Wleisure95/note-for-code)为https://github.com/Wleisure95/note-for-code
+>
 > **==以下序号为牛客网题目序号，面试题序号为书本题目序号==**
 
 ## 1.面试题4：[二维数组中的查找](http://www.nowcoder.com/practice/abc3fe2ce8e146608e868a70efebf62e?tpId=13&tqId=11154&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
@@ -2543,7 +2545,7 @@ int movingCount(int threshold, int rows, int cols)
 }
 ```
 
-
+QQ: 991853430 [欢迎交流](https://github.com/Wleisure95/note-for-code)
 
 # [Acwing多出来的题目](https://www.acwing.com/problem/)
 
@@ -2929,4 +2931,10 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
     return right;
 }
 ```
+
+![alipay](剑指offer牛客网顺序汇总.assets/alipay.jpg)
+
+![wechat](剑指offer牛客网顺序汇总.assets/wechat.png)
+
+
 
