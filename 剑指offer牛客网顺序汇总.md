@@ -2932,9 +2932,3 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
 }
 ```
 
-![alipay](剑指offer牛客网顺序汇总.assets/alipay.jpg)
-
-![wechat](剑指offer牛客网顺序汇总.assets/wechat.png)
-
-
-
