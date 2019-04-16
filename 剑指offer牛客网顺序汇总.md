@@ -2727,7 +2727,7 @@ int longestSubstringWithoutDuplication(string s)
 }
 ```
 
-##68.面试题53 题目二：[0到n-1中缺失的数字](https://www.acwing.com/problem/content/64/)
+## 68.面试题53 题目二：[0到n-1中缺失的数字](https://www.acwing.com/problem/content/64/)
 
 >   **题目：** 一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0到n-1之内。
 >
@@ -2769,7 +2769,7 @@ int getMissingNumber(vector<int>& nums)
 }
 ```
 
-##69.面试题53 题目三：[数组中数值和下标相等的元素](https://www.acwing.com/problem/content/65/)
+## 69.面试题53 题目三：[数组中数值和下标相等的元素](https://www.acwing.com/problem/content/65/)
 
 >   **题目：** 假设一个单调递增的数组里的每个元素都是整数并且是唯一的。请编程实现一个函数找出数组中任意一个数值等于其下标的元素。
 >
@@ -2793,7 +2793,7 @@ int getNumberSameAsIndex(vector<int>& nums)
 }
 ```
 
-##74.面试题56 题目二：[数组中唯一只出现一次的数字](https://www.acwing.com/problem/content/70/)
+## 74.面试题56 题目二：[数组中唯一只出现一次的数字](https://www.acwing.com/problem/content/70/)
 
 >   **题目：** 在一个数组中除了一个数字只出现一次之外，其他数字都出现了==三次==。请找出那个只出现一次的数字。你可以假设满足条件的数字一定存在。
 >
@@ -2838,7 +2838,7 @@ int findNumberAppearingOnce(vector<int>& nums)
 
 ![1552962315811](剑指offer牛客网顺序汇总.assets/1552962315811.png)
 
-##80.  面试题60：[n个骰子的点数](https://www.acwing.com/problem/content/76/)
+## 80.  面试题60：[n个骰子的点数](https://www.acwing.com/problem/content/76/)
 
 >   **题目：** 将一个骰子投掷n次，获得的总点数为s，s的可能范围为n~6n。掷出某一点数，可能有多种掷法，例如投掷2次，掷出3点，共有[1,2],[2,1]两种掷法。 
 >
@@ -2880,7 +2880,7 @@ vector<int> numberOfDice(int n)
 }
 ```
 
-##83.面试题63：[股票的最大利润](https://www.acwing.com/problem/content/79/)
+## 83.面试题63：[股票的最大利润](https://www.acwing.com/problem/content/79/)
 
 >   **题目：** 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖 ==一次==该股票可能获得的利润是多少？
 >
@@ -2902,7 +2902,7 @@ int maxDiff(vector<int>& nums)
 }
 ```
 
-##88.面试题68：[树中两个节点的最低公共祖先](https://www.acwing.com/problem/content/84/)
+## 88.面试题68：[树中两个节点的最低公共祖先](https://www.acwing.com/problem/content/84/)
 
 >   **题目：**给出一个二叉树，输入两个树节点，求它们的最低公共祖先。
 >
